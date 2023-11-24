@@ -1,0 +1,23 @@
+{
+  "name": "cc-ch2-ps191",
+  "version": "1.0.0",
+  "description": "aku make node versi 20 lts",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CH2-PS191/cc-ch2-ps191.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CH2-PS191/cc-ch2-ps191/issues"
+  },
+  "homepage": "https://github.com/CH2-PS191/cc-ch2-ps191#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
