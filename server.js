@@ -1,20 +1,19 @@
 const express = require('express');
+
+const admin = require('firebase-admin');
+const serviceAccount = require("./credentials.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 const app = express();
 const port = process.env.PORT || 8080;
 
-app.get('/', (req, res) => {
-  const name = process.env.NAME || 'World';
-  res.send(`Hello ${name}!`);
-});
+const indexRoute = require('./routes/index')
+const messageRoute = require('./routes/messages')
+app.use('/', indexRoute) //ini buat testing
+app.use('/message', messageRoute)
 
 app.listen(port, () => {
   console.log(`helloworld: listening on port ${port}`);
 });
-
-/*
-TODO:
-1. Folder routes terpisah
-2. Koneksi db
-3. private endpoint with token
-4. ?? 
-*/
