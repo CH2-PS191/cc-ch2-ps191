@@ -1,3 +1,4 @@
 node_modules/
 credentials.json
 servercopy.js
+credentials-bucket.json
