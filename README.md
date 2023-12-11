@@ -16,7 +16,7 @@
 
 ## TODO:
 
-1. Folder routes terpisah
-1. Koneksi db
-1. private endpoint with token
-1. Login with oauth/otp/2fa? -> token
+1. user update, upload img
+1. register pakar & teman sebaya
+1. create conversation
+1. 
