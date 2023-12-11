@@ -16,7 +16,6 @@
 
 ## TODO:
 
-1. user update, upload img
 1. register pakar & teman sebaya
 1. create conversation
 1. list conversations
