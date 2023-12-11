@@ -11,7 +11,7 @@ const port = process.env.PORT || 8080;
 
 const indexRoute = require('./routes/index')
 const messageRoute = require('./routes/messages')
-app.use('/', indexRoute)
+app.use('/', indexRoute) //ini buat testing
 app.use('/message', messageRoute)
 
 app.listen(port, () => {
