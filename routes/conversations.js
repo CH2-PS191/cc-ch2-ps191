@@ -36,7 +36,6 @@ router.post('/create', authenticateToken,  async (req, res) => {
   conversationRef.add(newConversation)
   .then((docRef) => {
     res.status(200).json({ success: true, message: `Dokumen berhasil ditambahkan dengan ID: ${docRef.id}` });
-    console.log();
   })
   .catch((error) => {
     console.error('Error saat menambahkan dokumen:', error);
@@ -80,7 +79,6 @@ router.post('/:conversationId/create', authenticateToken,  async (req, res) => {
   messagesRef.add(newMessage)
   .then((docRef) => {
     res.status(200).json({ success: true, message: `Dokumen berhasil ditambahkan dengan ID: ${docRef.id}` });
-    console.log();
   })
   .catch((error) => {
     console.error('Error saat menambahkan dokumen:', error);
