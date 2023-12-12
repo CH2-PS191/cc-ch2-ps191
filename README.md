@@ -16,9 +16,7 @@
 
 ## TODO:
 
-1. register pakar & teman sebaya
-1. create conversation
-1. list conversations
-1. list pakar
-1. list teman sebaya
-1. send message
+1. register pakar & teman sebaya // udah tapi ecek2 pas prod dihapus aja
+1. lu cari bug
+1. kalo nemu benerin
+1. we dah capek

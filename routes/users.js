@@ -48,4 +48,109 @@ router.put('/update', [authenticateToken, multer.single('file')], (req, res, nex
   blobStream.end(req.file.buffer);
 });
 
+router.get('/pakar', (req, res) => {
+  const messages = [];
+
+  const listAllUsers = (nextPageToken) => {
+    // List batch of users, 1000 at a time.
+    return admin.auth()
+      .listUsers(1000, nextPageToken)
+      .then((listUsersResult) => {
+        listUsersResult.users.forEach((userRecord) => {
+          const customClaims = userRecord.customClaims || {};
+          if (customClaims.pakar) {
+            console.log('Pakar user', userRecord.toJSON());
+            messages.push({ ...userRecord });
+          }
+        });
+        if (listUsersResult.pageToken) {
+          // List next batch of users.
+          return listAllUsers(listUsersResult.pageToken);
+        }
+      });
+  };
+
+  // Start listing users from the beginning, 1000 at a time.
+  listAllUsers()
+    .then(() => {
+      res.status(200).send(messages);
+    })
+    .catch((error) => {
+      console.log('Error listing users:', error);
+      res.status(500).send(error);
+    });
+});
+
+router.get('/sebaya', (req, res) => {
+  const messages = [];
+
+  const listAllUsers = (nextPageToken) => {
+    // List batch of users, 1000 at a time.
+    return admin.auth()
+      .listUsers(1000, nextPageToken)
+      .then((listUsersResult) => {
+        listUsersResult.users.forEach((userRecord) => {
+          const customClaims = userRecord.customClaims || {};
+          if (customClaims.sebaya) {
+            console.log('Sebaya user', userRecord.toJSON());
+            messages.push({ ...userRecord });
+          }
+        });
+        if (listUsersResult.pageToken) {
+          // List next batch of users.
+          return listAllUsers(listUsersResult.pageToken);
+        }
+      });
+  };
+
+  // Start listing users from the beginning, 1000 at a time.
+  listAllUsers()
+    .then(() => {
+      res.status(200).send(messages);
+    })
+    .catch((error) => {
+      console.log('Error listing users:', error);
+      res.status(500).send(error);
+    });
+});
+
+// TODO: INI DI PROD DIHAPUS
+// TODO: KALO GA MAU DIHAPUS DIBENERIN PAKE MIDDLEWARE
+// TODO: DIBIKIN CUMA BISA DIAKSES ROLE ADMIN
+// router.post('/admin', (req, res) => {
+//   admin.auth()
+//   .setCustomUserClaims(req.body.uid, { admin: true })
+//   .then(
+//     admin.auth()
+//       .getUser(req.body.uid)
+//       .then((userRecord) => {
+//         res.status(200).send(userRecord.toJSON());
+//       })
+//   );
+// });
+
+// router.post('/pakar', (req, res) => {
+//   admin.auth()
+//   .setCustomUserClaims(req.body.uid, { pakar: true })
+//   .then(
+//     admin.auth()
+//       .getUser(req.body.uid)
+//       .then((userRecord) => {
+//         res.status(200).send(userRecord.toJSON());
+//       })
+//   );
+// });
+
+// router.post('/sebaya', (req, res) => {
+//   admin.auth()
+//   .setCustomUserClaims(req.body.uid, { sebaya: true })
+//   .then(
+//     admin.auth()
+//       .getUser(req.body.uid)
+//       .then((userRecord) => {
+//         res.status(200).send(userRecord.toJSON());
+//       })
+//   );
+// });
+
 module.exports = router;
