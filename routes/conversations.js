@@ -86,5 +86,26 @@ router.post('/:conversationId/create', authenticateToken,  async (req, res) => {
   });
 });
 
+router.post('/:conversationId/bot', authenticateToken,  async (req, res) => {
+  const conversationId = req.params.conversationId;
+  const message = req.body.message;
+  const messagesRef = db.collection(`conversations/${conversationId}/messages`);
+
+  const newMessage = {
+    uid: 'bot',
+    message: message,
+    timestamp: admin.firestore.FieldValue.serverTimestamp() //ini udah gmt7
+  };
+
+  messagesRef.add(newMessage)
+  .then((docRef) => {
+    res.status(200).json({ success: true, message: `Dokumen berhasil ditambahkan dengan ID: ${docRef.id}` });
+  })
+  .catch((error) => {
+    console.error('Error saat menambahkan dokumen:', error);
+    res.status(500).json({ success: false, error: 'Terjadi kesalahan' });
+  });
+});
+
 
 module.exports = router;
