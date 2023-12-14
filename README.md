@@ -10,11 +10,11 @@
    ```
 
 ### 3. Aktifkan virtual environment:
-   -Windows
+   - Windows
    ```
    venv\Scripts\activate
    ```
-   -Linux/MacOS :
+   - Linux/MacOS :
    ```
    source venv/bin/activate
    ```
