@@ -35,7 +35,7 @@ router.post('/create', authenticateToken,  async (req, res) => {
 
   conversationRef.add(newConversation)
   .then((docRef) => {
-    res.status(200).json({ success: true, message: 'Dokumen berhasil ditambahkan dengan ID: ${docRef.id}' });
+    res.status(200).json({ success: true, message: `Dokumen berhasil ditambahkan dengan ID: ${docRef.id}` });
   })
   .catch((error) => {
     console.error('Error saat menambahkan dokumen:', error);
@@ -71,6 +71,39 @@ router.get('/:conversationId', authenticateToken,  async (req, res) => {
     
           res.status(200).json({ success: true, messages });
         })
+      } else {
+        res.status(403).json({ success: false, error: 'Akses ditolak.' });
+      }
+    }
+    )
+    .catch((error) => {
+      console.error('Error saat mengambil dokumen:', error);
+      res.status(500).json({ success: false, error: 'Terjadi kesalahan' });
+    });
+});
+
+router.put('/:conversationId/update', authenticateToken,  async (req, res) => {
+  const conversationId = req.params.conversationId;
+  const pakarUid = req.body.pakarUid;
+  const conversationRef = db.collection('conversations').doc(conversationId);
+
+  conversationRef.get()
+    .then((conversationDoc) => {
+      if (!conversationDoc.exists) {
+        return res.status(404).json({ success: false, error: 'Percakapan tidak ditemukan.' });
+      }
+
+      const members = conversationDoc.data().member;
+
+      // Periksa apakah req.user.uid adalah salah satu dari member
+      if (members.includes(req.user.uid)) {
+        if (!members.includes(pakarUid)) {
+          members.push(pakarUid);
+          conversationRef.update({member: members});
+          res.status(200).json({ success: true, message: 'Pakar atau sebaya berhasil ditambah' });
+        } else {
+          res.status(409).json({ success: false, message: 'Data sudah ada' });
+        }
       } else {
         res.status(403).json({ success: false, error: 'Akses ditolak.' });
       }
