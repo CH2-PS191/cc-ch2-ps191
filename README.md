@@ -13,10 +13,3 @@
    ```
    npm run start
    ```
-
-## TODO:
-
-1. register pakar & teman sebaya // udah tapi ecek2 pas prod dihapus aja
-1. lu cari bug
-1. kalo nemu benerin
-1. we dah capek
