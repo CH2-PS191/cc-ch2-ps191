@@ -129,7 +129,6 @@ router.post('/:conversationId/create', authenticateToken,  async (req, res) => {
   axios.post(endpoint, endpointData)
     .then((response) => {
       botMessage = response.data.answer;
-    }).then(
       conversationRef.get()
         .then((conversationDoc) => {
           if (!conversationDoc.exists) {
@@ -147,7 +146,7 @@ router.post('/:conversationId/create', authenticateToken,  async (req, res) => {
 
             const newMessagebot = {
               uid: 'bot',
-              message: botMessage,
+              message: response.data.answer,
               timestamp: admin.firestore.FieldValue.serverTimestamp() //ini udah gmt7
             };
             console.log(botMessage);
@@ -165,7 +164,7 @@ router.post('/:conversationId/create', authenticateToken,  async (req, res) => {
           }
         }
         )
-      )
+    })
     .catch((error) => {
       console.error('Error saat memanggil endpoint lain:', error);
       res.status(500).json({ success: false, error: 'Terjadi kesalahan' });
