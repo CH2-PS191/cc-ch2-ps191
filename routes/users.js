@@ -41,14 +41,14 @@ router.put('/update', [authenticateToken, multer.single('file')], (req, res, nex
       .catch((error) => {
         console.log('Error updating user:', error);
       });
-    res.status(200).send(publicUrl);
+    res.status(200).json({ publicUrl });
   });
 
   blobStream.end(req.file.buffer);
 });
 
-router.get('/pakar', (req, res) => {
-  const messages = [];
+router.get('/pakar', authenticateToken, (req, res) => {
+  const pakar = [];
 
   const listAllUsers = (nextPageToken) => {
     // List batch of users, 1000 at a time.
@@ -58,8 +58,8 @@ router.get('/pakar', (req, res) => {
         listUsersResult.users.forEach((userRecord) => {
           const customClaims = userRecord.customClaims || {};
           if (customClaims.pakar) {
-            console.log('Pakar user', userRecord.toJSON());
-            messages.push({ ...userRecord });
+            // console.log('Pakar user', userRecord.toJSON());
+            pakar.push({ ...userRecord });
           }
         });
         if (listUsersResult.pageToken) {
@@ -72,16 +72,16 @@ router.get('/pakar', (req, res) => {
   // Start listing users from the beginning, 1000 at a time.
   listAllUsers()
     .then(() => {
-      res.status(200).send(messages);
+      res.status(200).json({ pakar });
     })
     .catch((error) => {
       console.log('Error listing users:', error);
-      res.status(500).send(error);
+      res.status(500).json({ error });
     });
 });
 
-router.get('/sebaya', (req, res) => {
-  const messages = [];
+router.get('/sebaya', authenticateToken, (req, res) => {
+  const sebaya = [];
 
   const listAllUsers = (nextPageToken) => {
     // List batch of users, 1000 at a time.
@@ -92,7 +92,7 @@ router.get('/sebaya', (req, res) => {
           const customClaims = userRecord.customClaims || {};
           if (customClaims.sebaya) {
             console.log('Sebaya user', userRecord.toJSON());
-            messages.push({ ...userRecord });
+            sebaya.push({ ...userRecord });
           }
         });
         if (listUsersResult.pageToken) {
@@ -105,11 +105,11 @@ router.get('/sebaya', (req, res) => {
   // Start listing users from the beginning, 1000 at a time.
   listAllUsers()
     .then(() => {
-      res.status(200).send(messages);
+      res.status(200).json ({ sebaya });
     })
     .catch((error) => {
       console.log('Error listing users:', error);
-      res.status(500).send(error);
+      res.status(500).json({ error });
     });
 });
 
