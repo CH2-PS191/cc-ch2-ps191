@@ -1,1 +1,4 @@
-node_modules/
+.venv/
+.vscode/
+*.code-workspace
+*.code-workspace-wizard
