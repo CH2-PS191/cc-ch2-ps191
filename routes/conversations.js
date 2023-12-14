@@ -134,7 +134,7 @@ router.post('/:conversationId/create', authenticateToken, async (req, res) => {
     .then(response => {
       axios.post(endpoint, endpointData, {
         headers: {
-          'Authorization': `Bearer ${response.body}`
+          'Authorization': `Bearer ${response.data}`
         }
       })
         .then((response) => {
