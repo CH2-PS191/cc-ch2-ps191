@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-
-const admin = require('firebase-admin')
+const axios = require('axios');
+const admin = require('firebase-admin');
 const db = admin.firestore();
 
 const authenticateToken = require("../middleware/auth");
@@ -118,34 +118,56 @@ router.put('/:conversationId/update', authenticateToken,  async (req, res) => {
 router.post('/:conversationId/create', authenticateToken,  async (req, res) => {
   const conversationId = req.params.conversationId;
   const message = req.body.message;
+  let botMessage = null;
   const conversationRef = db.collection('conversations').doc(conversationId);
 
-  conversationRef.get()
-    .then((conversationDoc) => {
-      if (!conversationDoc.exists) {
-        return res.status(404).json({ success: false, error: 'Percakapan tidak ditemukan.' });
-      }
-      const conversationData = conversationDoc.data();
-      // Periksa apakah req.user.uid adalah salah satu dari member
-      if (conversationData.member.includes(req.user.uid)) {
-        const messagesRef = conversationRef.collection('messages');
-        const newMessage = {
-          uid: req.user.uid,
-          message: message,
-          timestamp: admin.firestore.FieldValue.serverTimestamp() //ini udah gmt7
-        };
-      
-        messagesRef.add(newMessage)
-          .then((docRef) => {
-            res.status(200).json({ success: true, message: `Dokumen berhasil ditambahkan dengan ID: ${docRef.id}` });
-          })
-      } else {
-        res.status(403).json({ success: false, error: 'Akses ditolak.' });
-      }
-    }
-    )
+  endpoint = 'https://chatbot-52o7pqozoa-et.a.run.app/predict';
+  endpointData = {
+    "input_text": message
+  }
+
+  axios.post(endpoint, endpointData)
+    .then((response) => {
+      botMessage = response.data.answer;
+    }).then(
+      conversationRef.get()
+        .then((conversationDoc) => {
+          if (!conversationDoc.exists) {
+            return res.status(404).json({ success: false, error: 'Percakapan tidak ditemukan.' });
+          }
+          const conversationData = conversationDoc.data();
+          // Periksa apakah req.user.uid adalah salah satu dari member
+          if (conversationData.member.includes(req.user.uid)) {
+            const messagesRef = conversationRef.collection('messages');
+            const newMessage = {
+              uid: req.user.uid,
+              message: message,
+              timestamp: admin.firestore.FieldValue.serverTimestamp() //ini udah gmt7
+            };
+
+            const newMessagebot = {
+              uid: 'bot',
+              message: botMessage,
+              timestamp: admin.firestore.FieldValue.serverTimestamp() //ini udah gmt7
+            };
+            console.log(botMessage);
+            messagesRef.add(newMessage)
+              .then((docRef) => {
+                console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef.id}`);
+                messagesRef.add(newMessagebot)
+                  .then((docRef1) => {
+                    console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef1.id}`);
+                    res.status(200).json({ success: true, message: `Dokumen berhasil ditambahkan dengan ID: ${docRef.id}` });
+                  })
+              })
+          } else {
+            res.status(403).json({ success: false, error: 'Akses ditolak.' });
+          }
+        }
+        )
+      )
     .catch((error) => {
-      console.error('Error saat mengambil dokumen:', error);
+      console.error('Error saat memanggil endpoint lain:', error);
       res.status(500).json({ success: false, error: 'Terjadi kesalahan' });
     });
 });
