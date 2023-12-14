@@ -118,7 +118,6 @@ router.put('/:conversationId/update', authenticateToken,  async (req, res) => {
 router.post('/:conversationId/create', authenticateToken,  async (req, res) => {
   const conversationId = req.params.conversationId;
   const message = req.body.message;
-  let botMessage = null;
   const conversationRef = db.collection('conversations').doc(conversationId);
 
   endpoint = 'https://chatbot-52o7pqozoa-et.a.run.app/predict';
@@ -128,7 +127,6 @@ router.post('/:conversationId/create', authenticateToken,  async (req, res) => {
 
   axios.post(endpoint, endpointData)
     .then((response) => {
-      botMessage = response.data.answer;
       conversationRef.get()
         .then((conversationDoc) => {
           if (!conversationDoc.exists) {
@@ -149,14 +147,17 @@ router.post('/:conversationId/create', authenticateToken,  async (req, res) => {
               message: response.data.answer,
               timestamp: admin.firestore.FieldValue.serverTimestamp() //ini udah gmt7
             };
-            console.log(botMessage);
             messagesRef.add(newMessage)
               .then((docRef) => {
                 console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef.id}`);
                 messagesRef.add(newMessagebot)
                   .then((docRef1) => {
                     console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef1.id}`);
-                    res.status(200).json({ success: true, message: `Dokumen berhasil ditambahkan dengan ID: ${docRef.id}` });
+                    res.status(200).json({ 
+                      success: true, 
+                      message: `Dokumen berhasil ditambahkan dengan ID: ${docRef.id}, ${docRef1.id}`, 
+                      response: response.data.answer
+                    });
                   })
               })
           } else {
