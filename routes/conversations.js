@@ -35,7 +35,7 @@ router.post('/create', authenticateToken, async (req, res) => {
 
   conversationRef.add(newConversation)
     .then((docRef) => {
-      res.status(200).json({ success: true, message: `Dokumen berhasil ditambahkan dengan ID: ${docRef.id}` });
+      res.status(200).json({ success: true, message: `Dokumen berhasil ditambahkan`, id: docRef.id });
     })
     .catch((error) => {
       console.error('Error saat menambahkan dokumen:', error);
@@ -155,7 +155,9 @@ router.post('/:conversationId/create', authenticateToken, async (req, res) => {
                     console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef1.id}`);
                     res.status(200).json({
                       success: true,
-                      message: `Dokumen berhasil ditambahkan dengan ID: ${docRef.id}, ${docRef1.id}`,
+                      message: `Dokumen berhasil ditambahkan`,
+                      id: docRef.id,
+                      idresponsebot: docRef1.id,
                       response: response.data.answer
                     });
                   })
@@ -197,7 +199,8 @@ router.post('/:conversationId/selfcreate', authenticateToken, async (req, res) =
             console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef.id}`);
                 res.status(200).json({
                   success: true,
-                  message: `Dokumen berhasil ditambahkan dengan ID: ${docRef.id}`,
+                  message: `Dokumen berhasil ditambahkan`,
+                  id: docRef.id
                 });
           })
       } else {
