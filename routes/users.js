@@ -6,8 +6,7 @@ const admin = require('firebase-admin')
 const authenticateToken = require("../middleware/auth");
 const multer = require('../middleware/multer');
 
-const storage = new Storage({ keyFilename: "credentials-bucket.json" }); //dev
-// const storage = new Storage(); //ini kalo prod
+const storage = new Storage();
 const bucket = storage.bucket("userimgempaq");
 
 const router = express.Router();
@@ -113,44 +112,5 @@ router.get('/sebaya', authenticateToken, (req, res) => {
       res.status(500).json({ error });
     });
 });
-
-// TODO: INI DI PROD DIHAPUS
-// TODO: KALO GA MAU DIHAPUS DIBENERIN PAKE MIDDLEWARE
-// TODO: DIBIKIN CUMA BISA DIAKSES ROLE ADMIN
-// router.post('/admin', (req, res) => {
-//   admin.auth()
-//   .setCustomUserClaims(req.body.uid, { admin: true })
-//   .then(
-//     admin.auth()
-//       .getUser(req.body.uid)
-//       .then((userRecord) => {
-//         res.status(200).send(userRecord.toJSON());
-//       })
-//   );
-// });
-
-// router.post('/pakar', (req, res) => {
-//   admin.auth()
-//   .setCustomUserClaims(req.body.uid, { pakar: true })
-//   .then(
-//     admin.auth()
-//       .getUser(req.body.uid)
-//       .then((userRecord) => {
-//         res.status(200).send(userRecord.toJSON());
-//       })
-//   );
-// });
-
-// router.post('/sebaya', (req, res) => {
-//   admin.auth()
-//   .setCustomUserClaims(req.body.uid, { sebaya: true })
-//   .then(
-//     admin.auth()
-//       .getUser(req.body.uid)
-//       .then((userRecord) => {
-//         res.status(200).send(userRecord.toJSON());
-//       })
-//   );
-// });
 
 module.exports = router;
