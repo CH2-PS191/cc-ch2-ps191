@@ -120,65 +120,53 @@ router.post('/:conversationId/create', authenticateToken, async (req, res) => {
   const message = req.body.message;
   const conversationRef = db.collection('conversations').doc(conversationId);
 
-  const url = 'http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/identity?audience=https://chatbot-52o7pqozoa-et.a.run.app/predict';
-  const headers = {
-    'Metadata-Flavor': 'Google'
-  };
-
   endpoint = 'https://chatbot-52o7pqozoa-et.a.run.app/predict';
   endpointData = {
     "input_text": message
   }
 
-  axios.get(url, { headers })
-    .then(response => {
-      axios.post(endpoint, endpointData, {
-        headers: {
-          'Authorization': `Bearer ${response.data}`
-        }
-      })
-        .then((response) => {
-          conversationRef.get()
-            .then((conversationDoc) => {
-              if (!conversationDoc.exists) {
-                return res.status(404).json({ success: false, error: 'Percakapan tidak ditemukan.' });
-              }
-              const conversationData = conversationDoc.data();
-              // Periksa apakah req.user.uid adalah salah satu dari member
-              if (conversationData.member.includes(req.user.uid)) {
-                const messagesRef = conversationRef.collection('messages');
-                const newMessage = {
-                  uid: req.user.uid,
-                  message: message,
-                  timestamp: admin.firestore.FieldValue.serverTimestamp() //ini udah gmt7
-                };
+  axios.post(endpoint, endpointData)
+    .then((response) => {
+      conversationRef.get()
+        .then((conversationDoc) => {
+          if (!conversationDoc.exists) {
+            return res.status(404).json({ success: false, error: 'Percakapan tidak ditemukan.' });
+          }
+          const conversationData = conversationDoc.data();
+          // Periksa apakah req.user.uid adalah salah satu dari member
+          if (conversationData.member.includes(req.user.uid)) {
+            const messagesRef = conversationRef.collection('messages');
+            const newMessage = {
+              uid: req.user.uid,
+              message: message,
+              timestamp: admin.firestore.FieldValue.serverTimestamp() //ini udah gmt7
+            };
 
-                const newMessagebot = {
-                  uid: 'bot',
-                  message: response.data.answer,
-                  timestamp: admin.firestore.FieldValue.serverTimestamp() //ini udah gmt7
-                };
-                messagesRef.add(newMessage)
-                  .then((docRef) => {
-                    console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef.id}`);
-                    messagesRef.add(newMessagebot)
-                      .then((docRef1) => {
-                        console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef1.id}`);
-                        res.status(200).json({
-                          success: true,
-                          message: `Dokumen berhasil ditambahkan`,
-                          id: docRef.id,
-                          idresponsebot: docRef1.id,
-                          response: response.data.answer
-                        });
-                      })
+            const newMessagebot = {
+              uid: 'bot',
+              message: response.data.answer,
+              timestamp: admin.firestore.FieldValue.serverTimestamp() //ini udah gmt7
+            };
+            messagesRef.add(newMessage)
+              .then((docRef) => {
+                console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef.id}`);
+                messagesRef.add(newMessagebot)
+                  .then((docRef1) => {
+                    console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef1.id}`);
+                    res.status(200).json({
+                      success: true,
+                      message: `Dokumen berhasil ditambahkan`,
+                      id: docRef.id,
+                      idresponsebot: docRef1.id,
+                      response: response.data.answer
+                    });
                   })
-              } else {
-                res.status(403).json({ success: false, error: 'Akses ditolak.' });
-              }
-            }
-            )
-        })
+              })
+          } else {
+            res.status(403).json({ success: false, error: 'Akses ditolak.' });
+          }
+        }
+        )
     })
     .catch((error) => {
       console.error('Error saat memanggil endpoint lain:', error);
@@ -209,11 +197,11 @@ router.post('/:conversationId/selfcreate', authenticateToken, async (req, res) =
         messagesRef.add(newMessage)
           .then((docRef) => {
             console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef.id}`);
-            res.status(200).json({
-              success: true,
-              message: `Dokumen berhasil ditambahkan`,
-              id: docRef.id
-            });
+                res.status(200).json({
+                  success: true,
+                  message: `Dokumen berhasil ditambahkan`,
+                  id: docRef.id
+                });
           })
       } else {
         res.status(403).json({ success: false, error: 'Akses ditolak.' });
