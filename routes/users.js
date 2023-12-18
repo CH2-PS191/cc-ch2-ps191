@@ -114,6 +114,26 @@ router.get('/sebaya', authenticateToken, (req, res) => {
     });
 });
 
+router.post('/conversationid', authenticateToken, (req, res) => {
+  admin.auth()
+  .setCustomUserClaims(req.user.uid, { conversationId: req.body.conversationId })
+  .then(
+    admin.auth()
+      .getUser(req.user.uid)
+      .then((userRecord) => {
+        res.status(200).send(userRecord.toJSON());
+      }).then(
+        admin.auth().getUser(req.user.uid).then((userdata) => {
+          console.log(userdata.customClaims.conversationId);
+        }
+        )
+      )
+  ).catch((error) => {
+    console.log(error);
+    res.status(500).send(error);
+  });
+});
+
 // TODO: INI DI PROD DIHAPUS
 // TODO: KALO GA MAU DIHAPUS DIBENERIN PAKE MIDDLEWARE
 // TODO: DIBIKIN CUMA BISA DIAKSES ROLE ADMIN
