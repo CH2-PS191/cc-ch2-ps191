@@ -120,11 +120,11 @@ router.post('/conversationid', authenticateToken, (req, res) => {
     admin.auth()
       .getUser(req.user.uid)
       .then((userRecord) => {
-        res.status(200).send(userRecord.toJSON());
+        res.status(200).json({ conversationId: userRecord.customClaims.conversationId });
       })
   ).catch((error) => {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).json({ error });
   });
 });
 
