@@ -122,7 +122,10 @@ router.post('/conversationid', authenticateToken, (req, res) => {
       .then((userRecord) => {
         res.status(200).send(userRecord.toJSON());
       })
-  );
+  ).catch((error) => {
+    console.log(error);
+    res.status(500).send(error);
+  });
 });
 
 module.exports = router;
