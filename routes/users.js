@@ -113,4 +113,16 @@ router.get('/sebaya', authenticateToken, (req, res) => {
     });
 });
 
+router.post('/conversationid', authenticateToken, (req, res) => {
+  admin.auth()
+  .setCustomUserClaims(req.user.uid, { conversationId: req.body.conversationId })
+  .then(
+    admin.auth()
+      .getUser(req.user.uid)
+      .then((userRecord) => {
+        res.status(200).send(userRecord.toJSON());
+      })
+  );
+});
+
 module.exports = router;
