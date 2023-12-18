@@ -113,7 +113,7 @@ router.get('/sebaya', authenticateToken, (req, res) => {
     });
 });
 
-router.post('/conversationid', authenticateToken, (req, res) => {
+router.post('/conversationclaims', authenticateToken, (req, res) => {
   admin.auth()
   .setCustomUserClaims(req.user.uid, { conversationId: req.body.conversationId })
   .then(
