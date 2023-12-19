@@ -40,7 +40,7 @@ def predict():
     predicted_index = np.argmax(predicted_probabilities)
     predicted_tag = label_encoder.inverse_transform([predicted_index])[0]
     respons = data_respon[data_respon['tag']==predicted_tag]['responses'].values[0][0]
-    return jsonify({'answer': respons})
+    return jsonify({'answer': respons,'tag':predicted_tag})
 
 if __name__ == '__main__':
     app.run(debug=True)
