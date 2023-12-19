@@ -150,7 +150,8 @@ router.post('/:conversationId/create', authenticateToken, async (req, res) => {
             messagesRef.add(newMessage)
               .then((docRef) => {
                 console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef.id}`);
-                messagesRef.add(newMessagebot)
+                setTimeout(() => {
+                  messagesRef.add(newMessagebot)
                   .then((docRef1) => {
                     console.log(`Dokumen berhasil ditambahkan dengan ID: ${docRef1.id}`);
                     res.status(200).json({
@@ -158,9 +159,11 @@ router.post('/:conversationId/create', authenticateToken, async (req, res) => {
                       message: `Dokumen berhasil ditambahkan`,
                       id: docRef.id,
                       idresponsebot: docRef1.id,
-                      response: response.data.answer
+                      response: response.data.answer,
+                      tag: response.data.tag
                     });
                   })
+                }, 500);
               })
           } else {
             res.status(403).json({ success: false, error: 'Akses ditolak.' });
