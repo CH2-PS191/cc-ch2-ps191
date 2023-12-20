@@ -40,3 +40,22 @@ gcloud builds submit --tag gcr.io/<project_id>/<function_name>
 ```
 gcloud run deploy --image gcr.io/<project_id>/<function_name> --platform managed
 ```
+
+# Endpoints
+## Predict Message
+
+- Method: POST
+- Path URL: /predict
+- Body:
+```json
+{
+    "input_text": string
+}
+```
+- Response (example):
+```json
+{
+	"answer": "hei kamu yang ada di sana",
+	"tag": "bvn*h Dimnri"
+}
+```
