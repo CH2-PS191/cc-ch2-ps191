@@ -27,6 +27,76 @@ router.get('/', authenticateToken, async (req, res) => {
     });
 });
 
+router.get('/pakar', authenticateToken, async (req, res) => {
+  const conversationsRef = db.collection('conversations');
+  conversationsRef.where('member', 'array-contains', req.user.uid)
+    .get()
+    .then((snapshot) => {
+      if (snapshot.empty) {
+        return res.status(404).json({ success: false, error: 'Tidak ada dokumen yang memenuhi kriteria.' });
+      }
+      const conversations = [];
+      const promises = [];
+
+      snapshot.forEach((doc) => {
+        const member = doc.data().member;
+        if (member.length === 3) {
+          const promise = admin.auth()
+          .getUser(member[2])
+          .then((userRecord) => {
+            if (userRecord.customClaims.pakar) {
+              conversations.push({ id: doc.id, ...doc.data() });
+            }
+          });
+          promises.push(promise);
+        }
+      });
+      Promise.all(promises)
+      .then(() => {
+        res.status(200).json({ success: true, conversations });
+      })
+    })
+    .catch((error) => {
+      console.error('Error saat mengambil dokumen:', error);
+      res.status(500).json({ success: false, error: 'Terjadi kesalahan' });
+    });
+});
+
+router.get('/sebaya', authenticateToken, async (req, res) => {
+  const conversationsRef = db.collection('conversations');
+  conversationsRef.where('member', 'array-contains', req.user.uid)
+    .get()
+    .then((snapshot) => {
+      if (snapshot.empty) {
+        return res.status(404).json({ success: false, error: 'Tidak ada dokumen yang memenuhi kriteria.' });
+      }
+      const conversations = [];
+      const promises = [];
+
+      snapshot.forEach((doc) => {
+        const member = doc.data().member;
+        if (member.length === 3) {
+          const promise = admin.auth()
+          .getUser(member[2])
+          .then((userRecord) => {
+            if (userRecord.customClaims.sebaya) {
+              conversations.push({ id: doc.id, ...doc.data() });
+            }
+          });
+          promises.push(promise);
+        }
+      });
+      Promise.all(promises)
+      .then(() => {
+        res.status(200).json({ success: true, conversations });
+      })
+    })
+    .catch((error) => {
+      console.error('Error saat mengambil dokumen:', error);
+      res.status(500).json({ success: false, error: 'Terjadi kesalahan' });
+    });
+});
+
 router.post('/create', authenticateToken, async (req, res) => {
   const conversationRef = db.collection('conversations');
   const newConversation = {
