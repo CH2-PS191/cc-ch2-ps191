@@ -8,7 +8,7 @@ As the CC team, we decided to create two backend services because we are using t
 
 ### 1. main
 
-Branch `main` contains the codebase for running the main backend service locally. This service handles authentication and database.
+Branch `main` contains the codebase for running the main backend service locally. This service handles authentication and database. Because this branch's content is identical to deploygcp branch, further documentations will be written in the [deploygcp branch](https://github.com/CH2-PS191/cc-ch2-ps191/tree/deploygcp).
 
 #### Running Locally
 
@@ -20,7 +20,7 @@ Branch `deploygcp` contains the codebase for deploying the main backend service 
 
 #### Deployment on Google App Engine
 
-- Detailed documentation on the main backend service can be found in the [deploygcp branch](https://github.com/CH2-PS191/cc-ch2-ps191/tree/deployml).
+- Detailed documentation on the main backend service can be found in the [deploygcp branch](https://github.com/CH2-PS191/cc-ch2-ps191/tree/deploygcp).
 
 ### 3. deployml
 
