@@ -203,6 +203,66 @@ The backend service is deployed along with various resources and services on GCP
 }
 ```
 
+## Get a User's Conversation with Pakar List
+
+- Method: GET
+- Path URL: /conversation/pakar
+- Authorization: idToken
+- Response (example):
+```json
+{
+    "success": true,
+    "conversations": [
+        {
+            "id": "Gm5hI6dBWSibFvq9Hvwi",
+            "member": [
+                "bot",
+                "REdBWJoHs9PHLLrlgRtK3qdtMoB3",
+                "gyRbEsccogYUm8dQxyStGnvkM3E3"
+            ]
+        },
+        {
+            "id": "94YLeVgB7PmfnZ0MErle",
+            "member": [
+                "bot",
+                "REdBWJoHs9PHLLrlgRtK3qdtMoB3",
+                "qlJA1ViLvUWp2hFPGGa3y9mAfzi2"
+            ]
+        }
+    ]
+}
+```
+
+## Get a User's Conversation with Sebaya List
+
+- Method: GET
+- Path URL: /conversation/sebaya
+- Authorization: idToken
+- Response (example):
+```json
+{
+    "success": true,
+    "conversations": [
+        {
+            "id": "g0zfRhe9o0DDSbzlqljx",
+            "member": [
+                "bot",
+                "REdBWJoHs9PHLLrlgRtK3qdtMoB3",
+                "ZQqnw9T1ebZlQDcgIpt9YD2vjGG3"
+            ]
+        },
+        {
+            "id": "VpTDj8pqHxuH22HVlJ2b",
+            "member": [
+                "bot",
+                "REdBWJoHs9PHLLrlgRtK3qdtMoB3",
+                "luNm5NFpUpMDy3wN9uwelQcDQsY2"
+            ]
+        }
+    ]
+}
+```
+
 ## Create New Conversation
 
 - Method: POST
